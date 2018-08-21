@@ -1,0 +1,20 @@
+{
+	"name": "RobotMovement",
+	"authors": [
+		"pyaephyoeshein@gmail.com <pyaephyoeshein@gmail.com>"
+	],
+	"description": "The project aims to develop Robot Movement task - Client",
+	"main": "",
+	"license": "MIT",
+	"homepage": "",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests"
+	],
+	"dependencies": {
+		"angular": "1.4.8"
+	}
+}

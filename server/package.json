@@ -1,0 +1,13 @@
+{
+  "name": "RobotMovement",
+  "version": "1.0.0",
+  "description": "The project aims to develop Robot Movement task",
+  "main": "index.js",
+  "repository": "https://github.com/ppshein/robotmovement",
+  "author": "Pyae Phyoe Shein",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3"
+  }
+}
