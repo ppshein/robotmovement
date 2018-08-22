@@ -8,7 +8,7 @@ Stack
 * bower
 
 ## Information
-As it's for nodejs project, I didn't effort to optimize client angularjs application by the way of separation files, minify and so on.
+As it's for nodejs project, I didn't effort to optimize client angularjs application by the way of separation files, minify, gulp and so on.
 
 ## Installation
 1. To run NodeJS locally, you must have to install `yarn` first and install all dependencies
