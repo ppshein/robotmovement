@@ -1,12 +1,13 @@
 'use strict'
 
 /* Dependencies */
-const express = require('express')
-const app = express()
-const cors = require('cors')
+const express = require('express'),
+	app = express(),
+	cors = require('cors'),
+	winston = require('winston');
 
 /* CORS configuration */
-/* as testing purpose, allow all inbound rules. */
+/* as testing purpose, allow all incoming requests. */
 var corsOptions = {
 	origin: '*',
 	optionsSuccessStatus: 200
@@ -22,7 +23,18 @@ app.set('port', (process.env.PORT || 5000))
 app.get('/', cors(corsOptions), function (req, res) {
 	var directionOfRebot = req.query;
 	if (validationServices.validationData(directionOfRebot) === 1) {
-		res.json(movementServices.moveDirection(directionOfRebot));
+		movementServices.moveDirection(directionOfRebot).then((directionOfRebot) => {
+			res.json(directionOfRebot);
+		}).catch(function (err) {
+			winston.error('movementServices.moveDirection error: %s', err);
+			/* if error found, leave as current position */
+			res.json({
+				x: parseInt(directionOfRebot.x),
+				y: parseInt(directionOfRebot.y),
+				f: directionOfRebot.f,
+				d: directionOfRebot.d
+			});
+		});
 	} else if (validationServices.validationData(directionOfRebot) === 3) {
 		/* init position */
 		res.json({

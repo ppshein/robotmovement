@@ -1,6 +1,12 @@
 'use strict'
 
+const Promise = require('bluebird');
+
 exports.moveDirection = (commandar) => {
+
+    /* define promises */
+    var q = Promise.defer();
+
     /* define init movement */
 	var movementOfRebot = {
 		x: parseInt(commandar.x),
@@ -23,14 +29,20 @@ exports.moveDirection = (commandar) => {
         ]
     };
 
-    if (commandar.d === 'move') {
-        movementOfRebot.f = movementCalculation(commandar, movementOfRebot);
-    } else {
-        var direction = directions.degrees.filter((e) => e.direction === commandar.f)[0];
-        var orientation = directions.orientation.filter((e) => e.orientation === commandar.d)[0];
-        movementOfRebot.f = getDirection(parseInt(direction.degree) + parseInt(orientation.degree));
+    /* add error handling */
+    try {
+        if (commandar.d === 'move') {
+            movementOfRebot.f = movementCalculation(commandar, movementOfRebot);
+        } else {
+            var direction = directions.degrees.filter((e) => e.direction === commandar.f)[0];
+            var orientation = directions.orientation.filter((e) => e.orientation === commandar.d)[0];
+            movementOfRebot.f = getDirection(parseInt(direction.degree) + parseInt(orientation.degree));
+        }
+        q.resolve(movementOfRebot);
+    } catch (e) {
+        q.reject(e);
     }
-    return movementOfRebot;
+    return q.promise;
 }
 
 /* create separate function */
