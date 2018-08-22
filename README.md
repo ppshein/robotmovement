@@ -19,11 +19,7 @@ As it's for nodejs project, I didn't effort to optimize client angularjs applica
 ```
     sudo npm install -g bower
 ```
-3. Install `Grunt`
-```
-    sudo npm install grunt-cli -g
-```
-4. Install application dependencies
+3. Install application dependencies
 ```
  bower install & npm install
 ```
