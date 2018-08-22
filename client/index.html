@@ -49,28 +49,22 @@
             var robotApp = angular.module('robotApp');
             robotApp.controller('homeCtrl', function ($scope, $rootScope, $httpParamSerializer) {
                 /* init location */
-                $scope.movement = {
-                    x: 0,
-                    y: 0,
-                    f: '',
-                    d: 'move'
-                };
-                $scope.imageRotate = {'transform': 'rotate(0deg)'};
                 
                 function moveRobot(axis) {
                     fetch('https://5sb06hqgnf.execute-api.ap-southeast-1.amazonaws.com/prod?' + $httpParamSerializer(axis)).then((response) => {
                         return response.json();
                     }).then(function (response) {
-                        $scope.movement.x = response.message.x;
-                        $scope.movement.y = response.message.y;
-                        $scope.movement.f = response.message.f !== 0 ? response.message.f : 'north';
+                        $rootScope.movement.x = response.message.x;
+                        $rootScope.movement.y = response.message.y;
+                        $rootScope.movement.f = response.message.f !== 0 ? response.message.f : 'north';
                         $rootScope.botMovement.movementSpace.direction = response.message;
                         if (response.message.d !== 'move') {
-                            $scope.imageRotate = {'transform': 'rotate(' + imageRotation($scope.movement.f)[0].degree + 'deg)'};
+                            $rootScope.imageRotate = {'transform': 'rotate(' + imageRotation($rootScope.movement.f)[0].degree + 'deg)'};
                         }
                         $scope.$apply();
                     }).catch((err) => {
                         console.log('err ' + err);
+                        alert(err)
                     });
                 }
 
@@ -96,13 +90,13 @@
 
                 $scope.keyDown = function(value) {
                     if (allowKey(value.keyCode) > -1) {
-                        $scope.movement.f = moveDirection(value.keyCode)[0][value.keyCode] !== ' ' ? moveDirection(value.keyCode)[0][value.keyCode] : ($scope.movement.f !== '' ? $scope.movement.f : 'north');
-                        $scope.movement.d = moveDirection(value.keyCode)[0]['d'];
-                        moveRobot($scope.movement);
+                        $rootScope.movement.f = moveDirection(value.keyCode)[0][value.keyCode] !== ' ' ? moveDirection(value.keyCode)[0][value.keyCode] : ($rootScope.movement.f !== '' ? $rootScope.movement.f : 'north');
+                        $rootScope.movement.d = moveDirection(value.keyCode)[0]['d'];
+                        moveRobot($rootScope.movement);
                     }
                 };
 
-                moveRobot($scope.movement);
+                moveRobot($rootScope.movement);
 
             });
         </script>

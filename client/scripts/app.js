@@ -4,8 +4,8 @@
     
     // Declare all require variable here, never declare controller files for common usage.
     robotApp.run(['$rootScope', function ($rootScope) {
+        
         /* draw space */
-
         $rootScope.botMovement = {
             movementSpace: {
                 x: [0, 1, 2, 3, 4],
@@ -29,6 +29,17 @@
                 { degree: 270, direction: 'west' }
             ]
         }
+
+        /* init movement */
+        $rootScope.movement = {
+            x: 0,
+            y: 0,
+            f: '',
+            d: 'move'
+        };
+
+        /* init image orientation */
+        $rootScope.imageRotate = {'transform': 'rotate(0deg)'};
 
     }]);
 })();
