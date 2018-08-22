@@ -5,10 +5,10 @@ const Promise = require('bluebird');
 exports.moveDirection = (commandar) => {
 
     /* define promises */
-    var q = Promise.defer();
+    const q = Promise.defer();
 
     /* define init movement */
-	var movementOfRebot = {
+	const movementOfRebot = {
 		x: parseInt(commandar.x),
 		y: parseInt(commandar.y),
         f: commandar.f,
@@ -16,7 +16,7 @@ exports.moveDirection = (commandar) => {
     };
 
     /* define direction name */
-    var directions = {
+    const directions = {
         orientation: [
             { orientation: 'left', degree: -90 },
             { orientation: 'right', degree: 90 },
@@ -34,8 +34,8 @@ exports.moveDirection = (commandar) => {
         if (commandar.d === 'move') {
             movementOfRebot.f = movementCalculation(commandar, movementOfRebot);
         } else {
-            var direction = directions.degrees.filter((e) => e.direction === commandar.f)[0];
-            var orientation = directions.orientation.filter((e) => e.orientation === commandar.d)[0];
+            const direction = directions.degrees.filter((e) => e.direction === commandar.f)[0];
+            const orientation = directions.orientation.filter((e) => e.orientation === commandar.d)[0];
             movementOfRebot.f = getDirection(parseInt(direction.degree) + parseInt(orientation.degree));
         }
         q.resolve(movementOfRebot);
@@ -45,7 +45,10 @@ exports.moveDirection = (commandar) => {
     return q.promise;
 }
 
-/* create separate function */
+/* 
+    create separate function
+    it's just for direction function 
+*/
 function movementCalculation(commandar, movementOfRebot) {
     var nextStep = 0;
     if (commandar.d === 'move' && commandar.f === 'north') {
@@ -64,6 +67,10 @@ function movementCalculation(commandar, movementOfRebot) {
     return nextStep;
 }
 
+/* 
+    it's to convert angle to direction
+    if angle = 0, that function will convert 0 to north
+*/
 function getDirection(angle) {
     /* clockwise direction */
     var directions = ['north', 'east', 'south', 'west'];

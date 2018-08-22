@@ -11,10 +11,10 @@
 
     <body ng-app="robotApp" ng-controller="homeCtrl" ng-keydown="keyDown($event)">
         <div>
-            <table class="mainTable" border="0">
+            <table class="mainTable">
                 <tr>
                     <td>
-                        <table width="50%" border="0" class="card movementTable">
+                        <table width="50%" class="card movementTable">
                             <tr ng-repeat="y in botMovement.movementSpace.y">
                                 <td ng-repeat="x in botMovement.movementSpace.x" class="block">
                                     <span ng-show="x === botMovement.movementSpace.direction.x && y === botMovement.movementSpace.direction.y">
@@ -51,14 +51,14 @@
                 /* init location */
                 
                 function moveRobot(axis) {
-                    fetch('https://5sb06hqgnf.execute-api.ap-southeast-1.amazonaws.com/prod?' + $httpParamSerializer(axis)).then((response) => {
+                    fetch('http://localhost:5000/?' + $httpParamSerializer(axis)).then((response) => {
                         return response.json();
                     }).then(function (response) {
-                        $rootScope.movement.x = response.message.x;
-                        $rootScope.movement.y = response.message.y;
-                        $rootScope.movement.f = response.message.f !== 0 ? response.message.f : 'north';
-                        $rootScope.botMovement.movementSpace.direction = response.message;
-                        if (response.message.d !== 'move') {
+                        $rootScope.movement.x = response.x;
+                        $rootScope.movement.y = response.y;
+                        $rootScope.movement.f = response.f !== 0 ? response.f : 'north';
+                        $rootScope.botMovement.movementSpace.direction = response;
+                        if (response.d !== 'move') {
                             $rootScope.imageRotate = {'transform': 'rotate(' + imageRotation($rootScope.movement.f)[0].degree + 'deg)'};
                         }
                         $scope.$apply();
