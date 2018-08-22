@@ -6,10 +6,11 @@ const app = express()
 const cors = require('cors')
 
 /* CORS configuration */
+/* as testing purpose, allow all inbound rules. */
 var corsOptions = {
-	origin: 'http://127.0.0.1:8080',
+	origin: '*',
 	optionsSuccessStatus: 200
-  }
+}
 
 /* Services */
 const validationServices = require('./services/validation.services');
@@ -23,6 +24,7 @@ app.get('/', cors(corsOptions), function (req, res) {
 	if (validationServices.validationData(directionOfRebot) === 1) {
 		res.json(movementServices.moveDirection(directionOfRebot));
 	} else if (validationServices.validationData(directionOfRebot) === 3) {
+		/* init position */
 		res.json({
 			x: 0,
 			y: 0

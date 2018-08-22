@@ -14,11 +14,11 @@
             <table class="mainTable" border="0">
                 <tr>
                     <td>
-                        <table width="50%" border="1" class="movementTable">
-                            <tr ng-repeat="y in movementSpace.y">
-                                <td ng-repeat="x in movementSpace.x" class="block">
-                                    <span ng-show="x === movementSpace.direction.x && y === movementSpace.direction.y">
-                                        <img src="./images/cute-cartoon-robot-head.png">
+                        <table width="50%" border="0" class="card movementTable">
+                            <tr ng-repeat="y in botMovement.movementSpace.y">
+                                <td ng-repeat="x in botMovement.movementSpace.x" class="block">
+                                    <span ng-show="x === botMovement.movementSpace.direction.x && y === botMovement.movementSpace.direction.y">
+                                        <img src="./images/cute-cartoon-robot-head.png" ng-style="imageRotate">
                                     </span>
                                 </td>
                             </tr>
@@ -27,7 +27,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <table width="50%" border="1" class="movementTable">
+                        <table width="50%" border="0" class="movementTable">
                             <tr>
                                 <td>
                                     X: {{ movement.x }} - Y: {{ movement.y }} - Report: {{ movement.f }}
@@ -44,7 +44,7 @@
             </table>
         </div>
         <script src="/bower_components/angular/angular.min.js"></script>
-        <script src="./app.js"></script>
+        <script src="./scripts/app.js"></script>
         <script>
             var robotApp = angular.module('robotApp');
             robotApp.controller('homeCtrl', function ($scope, $rootScope, $httpParamSerializer) {
@@ -55,14 +55,19 @@
                     f: '',
                     d: 'move'
                 };
+                $scope.imageRotate = {'transform': 'rotate(0deg)'};
                 
                 function moveRobot(axis) {
-                    fetch('http://localhost:5000/?' + $httpParamSerializer(axis)).then((response) => {
+                    fetch('https://5sb06hqgnf.execute-api.ap-southeast-1.amazonaws.com/prod?' + $httpParamSerializer(axis)).then((response) => {
                         return response.json();
                     }).then(function (response) {
-                        $scope.movement.x = response.x;
-                        $scope.movement.y = response.y;
-                        $scope.movementSpace.direction = response;
+                        $scope.movement.x = response.message.x;
+                        $scope.movement.y = response.message.y;
+                        $scope.movement.f = response.message.f !== 0 ? response.message.f : 'north';
+                        $rootScope.botMovement.movementSpace.direction = response.message;
+                        if (response.message.d !== 'move') {
+                            $scope.imageRotate = {'transform': 'rotate(' + imageRotation($scope.movement.f)[0].degree + 'deg)'};
+                        }
                         $scope.$apply();
                     }).catch((err) => {
                         console.log('err ' + err);
@@ -70,51 +75,28 @@
                 }
 
                 function moveDirection(keyCode) {
-                    return result = $rootScope.movementKey.filter(
+                    return result = $rootScope.botMovement.movementKey.filter(
                         function(item) {
                             return item[keyCode]
                         }
                     );
                 }
 
-                function toDegrees (angle) {
-                    return angle * (180 / Math.PI);
-                }   
-                
-                function toRadians (angle) {
-                    return angle * (Math.PI / 180);
+                function imageRotation(direction) {
+                    return result = $rootScope.botMovement.degrees.filter(
+                        function(item) {
+                            return item.direction === direction
+                        }
+                    );
                 }
-
-                function calculateAngle(x1, y1, x2, y2) {
-                    var angle = toDegrees(Math.atan2(x2 - x1, y2 - y1));
-                    angle = angle + Math.ceil( - angle / 360 ) * 360;
-                    return angle;
-                }
-
-                function angle(cx, cy, ex, ey) {
-                    var dy = ey - cy;
-                    var dx = ex - cx;
-                    var theta = Math.atan2(dy, dx);
-                    theta *= 180 / Math.PI;
-                    return theta;
-                }
-
-                function angle360(cx, cy, ex, ey) {
-                    var theta = angle(cx, cy, ex, ey);
-                    if (theta < 0) theta = 360 + theta;
-                    return theta;
-                }
-
-                console.log(angle(2, 2, 2, 1));
-                console.log(angle360(2, 2, 2, 1));
 
                 function allowKey(keyCode) {
-                    return $rootScope.allowKeyCode.indexOf(keyCode);
+                    return $rootScope.botMovement.allowKeyCode.indexOf(keyCode);
                 }
 
                 $scope.keyDown = function(value) {
                     if (allowKey(value.keyCode) > -1) {
-                        $scope.movement.f = moveDirection(value.keyCode)[0][value.keyCode];
+                        $scope.movement.f = moveDirection(value.keyCode)[0][value.keyCode] !== ' ' ? moveDirection(value.keyCode)[0][value.keyCode] : ($scope.movement.f !== '' ? $scope.movement.f : 'north');
                         $scope.movement.d = moveDirection(value.keyCode)[0]['d'];
                         moveRobot($scope.movement);
                     }

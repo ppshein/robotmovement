@@ -1,53 +1,59 @@
 'use strict'
 
-exports.moveDirection = (directionOfRebot) => {
+exports.moveDirection = (commandar) => {
+    /* define init movement */
 	var movementOfRebot = {
-		x: parseInt(directionOfRebot.x),
-		y: parseInt(directionOfRebot.y),
-        m: directionOfRebot.f
+		x: parseInt(commandar.x),
+		y: parseInt(commandar.y),
+        f: commandar.f,
+        d: commandar.d
     };
 
-    if (directionOfRebot.d === 'move') {
-        movementOfRebot.m = movementCalculation(directionOfRebot, movementOfRebot);
-    }
+    /* define direction name */
+    var directions = {
+        orientation: [
+            { orientation: 'left', degree: -90 },
+            { orientation: 'right', degree: 90 },
+        ],
+        degrees: [
+            { degree: 0, direction: 'north' },
+            { degree: 90, direction: 'east' },
+            { degree: 180, direction: 'south' },
+            { degree: 270, direction: 'west' }
+        ]
+    };
 
-    /*
-    else if (directionOfRebot.d === 'left' && directionOfRebot.f === 'north') {
-		  movementOfRebot.m = 'west';
-    } else if (directionOfRebot.d === 'right' && directionOfRebot.f === 'north') {
-		  movementOfRebot.m = 'east';
-    } else if (directionOfRebot.d === 'left' && directionOfRebot.f === 'east') {
-		  movementOfRebot.m = 'north';
-    } else if (directionOfRebot.d === 'right' && directionOfRebot.f === 'east') {
-		  movementOfRebot.m = 'south';
-    } else if (directionOfRebot.d === 'left' && directionOfRebot.f === 'west') {
-		  movementOfRebot.m = 'south';
-    } else if (directionOfRebot.d === 'right' && directionOfRebot.f === 'west') {
-		  movementOfRebot.m = 'north';
-    } else if (directionOfRebot.d === 'left' && directionOfRebot.f === 'south') {
-		  movementOfRebot.m = 'east';
-    } else if (directionOfRebot.d === 'right' && directionOfRebot.f === 'south') {
-		  movementOfRebot.m = 'west';
+    if (commandar.d === 'move') {
+        movementOfRebot.f = movementCalculation(commandar, movementOfRebot);
+    } else {
+        var direction = directions.degrees.filter((e) => e.direction === commandar.f)[0];
+        var orientation = directions.orientation.filter((e) => e.orientation === commandar.d)[0];
+        movementOfRebot.f = getDirection(parseInt(direction.degree) + parseInt(orientation.degree));
     }
-    */
     return movementOfRebot;
 }
 
-function movementCalculation(directionOfRebot, movementOfRebot) {
+/* create separate function */
+function movementCalculation(commandar, movementOfRebot) {
     var nextStep = 0;
-    if (directionOfRebot.d === 'move' && directionOfRebot.f === 'north') {
-        parseInt(directionOfRebot.y) + 1 > 4 ? movementOfRebot.y : movementOfRebot.y += 1;
-		nextStep = directionOfRebot.f;
-    } else if (directionOfRebot.d === 'move' && directionOfRebot.f === 'east') {
-        parseInt(directionOfRebot.x) + 1 > 4 ? movementOfRebot.x : movementOfRebot.x += 1;
-        nextStep = directionOfRebot.f;
-    } else if (directionOfRebot.d === 'move' && directionOfRebot.f === 'west') {
-        parseInt(directionOfRebot.x) - 1 < 0 ? movementOfRebot.x : movementOfRebot.x -= 1;
-        nextStep = directionOfRebot.f;
-    } else if (directionOfRebot.d === 'move' && directionOfRebot.f === 'south') {
-        parseInt(directionOfRebot.y) - 1 < 0 ? movementOfRebot.y : movementOfRebot.y -= 1;
-        nextStep = directionOfRebot.f;
+    if (commandar.d === 'move' && commandar.f === 'north') {
+        parseInt(commandar.y) + 1 > 4 ? movementOfRebot.y : movementOfRebot.y += 1;
+		nextStep = commandar.f;
+    } else if (commandar.d === 'move' && commandar.f === 'east') {
+        parseInt(commandar.x) + 1 > 4 ? movementOfRebot.x : movementOfRebot.x += 1;
+        nextStep = commandar.f;
+    } else if (commandar.d === 'move' && commandar.f === 'west') {
+        parseInt(commandar.x) - 1 < 0 ? movementOfRebot.x : movementOfRebot.x -= 1;
+        nextStep = commandar.f;
+    } else if (commandar.d === 'move' && commandar.f === 'south') {
+        parseInt(commandar.y) - 1 < 0 ? movementOfRebot.y : movementOfRebot.y -= 1;
+        nextStep = commandar.f;
     }
     return nextStep;
+}
 
+function getDirection(angle) {
+    /* clockwise direction */
+    var directions = ['north', 'east', 'south', 'west'];
+    return directions[Math.round(((angle %= 360) < 0 ? angle + 360 : angle) / 90) % 4];
 }
