@@ -1,5 +1,15 @@
 # Robot Movement
 
+There is three folders included. Frontend development is called `client` and its linked to `server`. For online test case , I prefer `lambda` folder. It's included 5 seconds offline mode. For code checking, please use `server` and `lambda` folders. For `client`, I didn't code and folder structure optimization.
+
+To test online, I've integrated API Gateway, Lambda, DynamoDb and S3.
+http://robotmovement.s3-website-ap-southeast-1.amazonaws.com
+
+For backend api,
+https://5sb06hqgnf.execute-api.ap-southeast-1.amazonaws.com/prod?x=0&y=0&f=north&d=move
+
+
+
 Stack
 =============
 * Node.js (v7.0.0)
