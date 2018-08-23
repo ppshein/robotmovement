@@ -35,6 +35,7 @@ Run locally for client, go to `client` folder and run, `http-server`
 https://5sb06hqgnf.execute-api.ap-southeast-1.amazonaws.com/prod?x=0&y=0&f=north&d=move
 
 ## S3
+To test that Project, click on following link and its explanation is included.
 http://robotmovement.s3-website-ap-southeast-1.amazonaws.com/
 
 ## Output
