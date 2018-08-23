@@ -9,6 +9,9 @@ For backend api,
 https://5sb06hqgnf.execute-api.ap-southeast-1.amazonaws.com/prod?x=0&y=0&f=north&d=move
 
 
+## Test Cases
+Virtual test, please go http://robotmovement.s3-website-ap-southeast-1.amazonaws.com and found that robot will be standing at `south west` corner. And please use keyboard arrow keys to move Robot and rotation, please use `left` as `L` key and `right` as `R` key.
+
 
 Stack
 =============
